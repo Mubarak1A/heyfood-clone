@@ -1,8 +1,10 @@
 // components/Category.js
 import React, { useState } from 'react';
 import { Box, Typography, Button } from '@mui/material';
+import { IconButton, Menu, MenuItem } from '@mui/material';
+import { ArrowDropDown as ArrowDropDownIcon } from '@mui/icons-material';
 
-const Category = () => {
+const Category = ({ /*activeCategory,*/ onCategoryClick, onMenuClick }) => {
   const [activeCategory, setActiveCategory] = useState('Restaurants'); // Default to "Restaurants"
 
   const handleCategoryClick = (category) => {

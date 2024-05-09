@@ -3,13 +3,12 @@ import React from 'react';
 import { useState } from 'react';
 import Navbar from './components/navbar';
 import Category from './components/categories';
-//import FoodList from './components/foodlists';
+import FoodList from './components/foodlists';
 import BannerCarousel from './components/bannerCarousel';
+import SortingComponent from './components/sorting'
 import RestaurantList from './components/restaurantsLists';
 import { Box } from '@mui/material';
-import IconButton from '@mui/material';
-import Menu from '@mui/material';
-import MenuItem from '@mui/material';
+import { IconButton, Menu, MenuItem } from '@mui/material';
 import Grid from '@mui/material/Grid';
 import Container from '@mui/material/Container';
 import { ArrowDropDown as ArrowDropDownIcon } from '@mui/icons-material';
@@ -18,7 +17,9 @@ export default function Home() {
 
   const [anchorEl, setAnchorEl] = useState(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [activeCategory, setActiveCategory] = useState('Restaurants');
+  //let [activeCategory, setActiveCategory] = useState('Restaurants');
+
+  const numberOfStores = 30;
 
   const handleMenuClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -34,6 +35,10 @@ export default function Home() {
     setActiveCategory(category);
   };
 
+  /*const handleCategoryClick = (category) => {
+    setActiveCategory(category);
+  };*/
+
   const bannerUrls = [
     'https://res.cloudinary.com/dgny0gcfm/image/upload/v1715129071/heyfood/banner4_jnqilv.jpg',
     'https://res.cloudinary.com/dgny0gcfm/image/upload/v1715129071/heyfood/banner5_hj84pf.jpg',
@@ -48,11 +53,11 @@ export default function Home() {
     <>
       <Navbar />
       <Category
-        activeCategory={activeCategory}
+        /*activeCategory={activeCategory}*/
         onCategoryClick={handleCategoryClick}
         onMenuClick={handleMenuClick}
       />
-
+      <FoodList />
       <BannerCarousel bannerUrls={bannerUrls} />
       <Box>
         {/* Sorting drop-down menu for mobile */}
