@@ -1,4 +1,6 @@
 // components/Navbar.js
+import { useState } from 'react';
+import Sidebar from './Sidebar';
 import React from "react";
 import {
   AppBar,
@@ -58,12 +60,18 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
 
 const Navbar = ({ cartCount = 0 }) => {
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
+  const toggleSidebar = () => {
+    setIsSidebarOpen(!isSidebarOpen);
+  };
+
   return (
     <AppBar position="static">
       <Toolbar>
         {/* Burger Menu Icon */}
-        <IconButton edge="start" color="inherit" aria-label="menu">
-          <MenuIcon />
+        <IconButton edge="start" color="inherit" aria-label="menu" onClick={toggleSidebar}>
+          <Sidebar />
         </IconButton>
 
         {/* Website Logo (visible only on large screens) */}
