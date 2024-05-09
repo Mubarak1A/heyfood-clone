@@ -30,6 +30,13 @@ const Category = () => {
           Groceries
         </Typography>
       </Button>
+
+      <IconButton
+        onClick={onMenuClick}
+        sx={{ display: { xs: 'block', md: 'none' }, marginLeft: 'auto' }}
+      >
+        <ArrowDropDownIcon />
+      </IconButton>
     </Box>
   );
 };
