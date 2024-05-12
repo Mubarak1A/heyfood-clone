@@ -1,8 +1,5 @@
 import React, { useState } from "react";
-import {
-  AppBar, Toolbar, Typography, IconButton, Badge, InputBase, Box,
-  Button
-} from "@mui/material";
+import { AppBar, Toolbar, Typography, IconButton, Badge, InputBase, Box, Button } from "@mui/material";
 import { Menu as MenuIcon, LocationOn as LocationIcon, Search as SearchIcon, ShoppingCart as ShoppingCartIcon, Image } from "@mui/icons-material";
 import { alpha, styled } from "@mui/material/styles";
 
@@ -94,10 +91,6 @@ const Navbar = ({ cartCount = 0 }) => {
     setIsOverlayOpen(false); // Close the overlay
   };
 
-  const toggleSidebar = () => {
-    setIsSidebarOpen(!isSidebarOpen);
-  };
-
   const Search = styled('div')(({ theme }) => ({
     position: 'relative',
     borderRadius: theme.shape.borderRadius,
@@ -157,6 +150,7 @@ const Navbar = ({ cartCount = 0 }) => {
           />
           <div sx={{ display: { xs: 'none', md: 'flex' } }}>
             <IconButton size="large" aria-label="show 4 new mails" color="inherit">
+              <LocationIcon />
               <Typography variant="body1">Set Location</Typography>
             </IconButton>
           </div>
