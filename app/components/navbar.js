@@ -49,7 +49,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 
-const Navbar = ({ cartCount = 0 }) => {
+const Navbar = ({ cartCount = 0, foodItem, isSignIn }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isOverlayOpen, setIsOverlayOpen] = useState(false);
   const [isSignInOpen, setIsSignInOpen] = useState(false);
@@ -80,8 +80,6 @@ const Navbar = ({ cartCount = 0 }) => {
     handleSignUpClose(); // Close the sign-up dialog
     handleSignInClick(); // Open the sign-in dialog
   };
-
-  const foods = []
 
   const handleSearchClick = () => {
     setIsOverlayOpen(true); // Open the search overlay
@@ -142,7 +140,7 @@ const Navbar = ({ cartCount = 0 }) => {
 
       <AppBar position="static">
         <Toolbar sx={{ display: 'flex', justifyContent: 'space-around' }}>
-          <Sidebar />
+          <Sidebar isSignIn={isSignIn}/>
           <img
             src={'https://res.cloudinary.com/dgny0gcfm/image/upload/v1715128417/heyfood/hey_logo_lctvjf.jpg'}
             alt={'LOGO'}
@@ -162,9 +160,11 @@ const Navbar = ({ cartCount = 0 }) => {
               startAdornment={<SearchIcon />}
             />
           </Search>
-          <Button onClick={handleSignInClick}>
+          {!(isSignIn) && (
+            <Button onClick={handleSignInClick} sx={{ display: { xs: 'none', md: 'block' } }}>
             <Typography variant="h6">SIGNIN</Typography>
           </Button>
+          )}
           <IconButton size="large" aria-label="show 17 new notifications" color="inherit">
             <Badge badgeContent={cartCount} color="error">
               <ShoppingCartIcon />
@@ -177,7 +177,7 @@ const Navbar = ({ cartCount = 0 }) => {
       </AppBar>
 
       {isOverlayOpen && (
-        <SearchOverlay foods={foods} onClose={handleOverlayClose} />
+        <SearchOverlay foodItem={foodItem} onClose={handleOverlayClose} />
       )}
     </Box>
   )

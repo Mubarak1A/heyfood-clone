@@ -1,9 +1,7 @@
 // components/FoodList.js
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Box, Typography, CircularProgress } from '@mui/material';
-import { Swiper, SwiperSlide } from 'react-swipeable';
-import { styled } from '@mui/material/styles';
+import { Box, Typography, CircularProgress, Paper } from '@mui/material';
 
 const FoodList = () => {
   const [foodItems, setFoodItems] = useState([]);
@@ -11,7 +9,8 @@ const FoodList = () => {
 
   useEffect(() => {
     // Fetch the list of food items from the backend
-    axios.get('/api/food')
+    axios
+      .get('https://heyfood-clone-backend.onrender.com/getFoods')
       .then((response) => {
         setFoodItems(response.data);
         setLoading(false);
@@ -23,37 +22,56 @@ const FoodList = () => {
   }, []);
 
   if (loading) {
-    return <CircularProgress />;
+    return (
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          height: '100vh', // Center the loading spinner
+        }}
+      >
+        <CircularProgress />
+      </Box>
+    );
   }
 
   return (
-    <Box padding={2}>
-      <Typography variant="h6">Available Foods</Typography>
-      <Swiper
-        slidesPerView={3}
-        spaceBetween={10}
-        grabCursor
-      >
-        {foodItems.map((item) => (
-          <SwiperSlide key={item._id}>
-            <Box
-              sx={{
-                padding: 2,
-                border: '1px solid #ccc',
-                borderRadius: '8px',
-                textAlign: 'center',
-              }}
-            >
-              <img
-                src={item.tagUrl}
-                alt={item.name}
-                style={{ width: '100%', height: 'auto' }}
-              />
-              <Typography variant="subtitle1">{item.name}</Typography>
-            </Box>
-          </SwiperSlide>
-        ))}
-      </Swiper>
+    <Box
+      sx={{
+        padding: 2,
+        display: 'flex',
+        overflowX: 'auto',
+        scrollSnapType: 'x mandatory',
+        scrollbarWidth: 'none',
+        msOverflowStyle: 'none',
+        '&::-webkit-scrollbar': {
+          display: 'none',
+        },
+      }}
+    >
+      {foodItems.map((foodItem, index) => (
+        <Paper
+          key={index}
+          sx={{
+            flex: '0 0 auto',
+            scrollSnapAlign: 'start',
+            width: '200px',
+            margin: 1,
+            backgroundColor: 'white',
+            padding: '10px',
+            textAlign: 'center',
+            border: '1px solid #ccc',
+          }}
+        >
+          <img
+            src={foodItem.tagUrl}
+            alt={`foodTag ${index + 1}`}
+            style={{ maxWidth: '100%', height: 'auto' }} // Ensures image fits within the swiper item
+          />
+          <Typography variant="subtitle1">{foodItem.name}</Typography>
+        </Paper>
+      ))}
     </Box>
   );
 };

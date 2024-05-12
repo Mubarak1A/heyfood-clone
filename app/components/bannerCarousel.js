@@ -1,34 +1,101 @@
-import React from 'react';
-import { Swiper, SwiperSlide } from 'swiper/react';
-import { Navigation, Autoplay, Pagination } from 'swiper/modules'; // Swiper modules
-import 'swiper/css';
-import 'swiper/css/navigation';
-import 'swiper/css/pagination'; 
-
+import React, { useRef } from 'react';
+import { Paper, IconButton, Box } from '@mui/material';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 
 const BannerCarousel = ({ bannerUrls }) => {
+  const swiperRef = useRef(null);
+
+  const scrollLeft = () => {
+    if (swiperRef.current) {
+      swiperRef.current.scrollBy({
+        left: -200, // Adjust scroll distance for left navigation
+        behavior: 'smooth',
+      });
+    }
+  };
+
+  const scrollRight = () => {
+    if (swiperRef.current) {
+      swiperRef.current.scrollBy({
+        left: 200, // Adjust scroll distance for right navigation
+        behavior: 'smooth',
+      });
+    }
+  };
+
   return (
-    <Swiper
-      modules={[Navigation, Autoplay, Pagination]} // Enable desired modules
-      spaceBetween={30} // Spacing between slides
-      autoplay={{ delay: 5000 }} // Autoplay delay in milliseconds
-      navigation // Enable navigation arrows
-      pagination={{ clickable: true }} // Enable clickable pagination dots
-    >
-      {bannerUrls.map((url, index) => (
-        <SwiperSlide key={index}>
-          <img
-            src={url}
-            alt={`Banner ${index + 1}`}
-            style={{
-              width: '20%',
-              height: 'auto',
+    <Box sx={{ position: 'relative' }}>
+      {/* Left Navigation Button */}
+      <IconButton
+        sx={{
+          position: 'absolute',
+          top: '50%',
+          left: 1,
+          transform: 'translateY(-50%)',
+          zIndex: 100,
+        }}
+        onClick={scrollLeft}
+      >
+        <ArrowBackIcon />
+      </IconButton>
+
+      {/* Swiper Container */}
+      <Box
+        ref={swiperRef}
+        sx={{
+          display: 'flex',
+          overflowX: 'auto',
+          scrollSnapType: 'x mandatory',
+          scrollbarWidth: 'none',
+          msOverflowStyle: 'none',
+          '&::-webkit-scrollbar': {
+            display: 'none', // Hide scrollbar
+          },
+        }}
+      >
+        {/* Swiper Items */}
+        {bannerUrls.map((bannerUrl, index) => (
+          <Paper
+            key={index}
+            sx={{
+              flex: '0 0 auto',
+              scrollSnapAlign: 'start',
+              width: '30%', // Adjust to show multiple slides
+              minWidth: '200px', // Minimum width for readability
+              margin: 1, // Spacing between slides
+              backgroundColor: 'white',
+              padding: 2,
+              textAlign: 'center',
               borderRadius: '8px',
             }}
-          />
-        </SwiperSlide>
-      ))}
-    </Swiper>
+          >
+            <img
+              src={bannerUrl}
+              alt={`Banner ${index + 1}`}
+              style={{
+                width: '100%',
+                height: 'auto',
+              }}
+            />
+          </Paper>
+        ))}
+      </Box>
+
+      {/* Right Navigation Button */}
+      <IconButton
+        sx={{
+          position: 'absolute',
+          top: '50%',
+          right: 1,
+          transform: 'translateY(-50%)',
+          zIndex: 100,
+        }}
+        onClick={scrollRight}
+      >
+        <ArrowForwardIcon />
+      </IconButton>
+    </Box>
   );
 };
 

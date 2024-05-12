@@ -2,7 +2,7 @@ import React from 'react';
 import { Box, IconButton, Typography } from '@mui/material';
 import { Close as CloseIcon } from '@mui/icons-material';
 
-const SearchOverlay = ({ foods, onClose }) => {
+const SearchOverlay = ({ foodItem, onClose }) => {
   return (
     <Box
       sx={{
@@ -35,6 +35,7 @@ const SearchOverlay = ({ foods, onClose }) => {
       {/* Content area for available foods */}
       <Box
         sx={{
+          backgroundColor: 'white',
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
@@ -46,31 +47,24 @@ const SearchOverlay = ({ foods, onClose }) => {
         <Typography variant="h5" color="white" gutterBottom>
           Available Foods
         </Typography>
-
-        {/* Block arrangement of available foods */}
-        <Box
-          sx={{
-            display: 'flex',
-            flexWrap: 'wrap',
-            justifyContent: 'center',
-            gap: 2,
-          }}
-        >
-          {foods.map((food, index) => (
-            <Box
-              key={index}
-              sx={{
-                backgroundColor: 'white',
-                padding: 2,
-                borderRadius: '8px',
-                boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)', // Light shadow
-                cursor: 'pointer',
-              }}
-            >
-              <Typography variant="subtitle1">{food.name}</Typography>
-            </Box>
-          ))}
-        </Box>
+        {foodItem.map((food, index) => (
+          <Box
+            key={index}
+            sx={{
+              backgroundColor: 'white',
+              padding: 2,
+              borderRadius: '8px',
+              boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)', // Light shadow
+              cursor: 'pointer',
+            }}
+          >
+            <img
+              src={foodItem.tagUrl}
+              alt={`foodTag ${index + 1}`}
+            />
+            <Typography variant="subtitle1">{foodItem.name}</Typography>
+          </Box>
+        ))}
       </Box>
     </Box>
   );

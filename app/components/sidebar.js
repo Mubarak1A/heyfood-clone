@@ -5,12 +5,19 @@ import { Menu as MenuIcon, Lock as LockIcon, Person as PersonIcon, Logout as Log
 import AppleIcon from '@mui/icons-material/Apple';
 import AndroidIcon from '@mui/icons-material/Android';
 
-const Sidebar = ({ user = null }) => {
+const Sidebar = ({ isSignIn }) => {
   const [isOpen, setIsOpen] = useState(false);
+
+  let user = JSON.parse(localStorage.getItem("currentuser"));
 
   const toggleDrawer = () => {
     setIsOpen(!isOpen);
   };
+
+  const handleSignOutClick = () => {
+    localStorage.removeItem("currentuser")
+    user = None
+  }
 
   return (
     <>
@@ -28,7 +35,7 @@ const Sidebar = ({ user = null }) => {
           </IconButton>
 
           <List>
-            {user ? (
+            {isSignIn ? (
               <>
                 {/* When signed in */}
                 <ListItem sx={{ marginBottom: '5px' }}>
@@ -47,7 +54,7 @@ const Sidebar = ({ user = null }) => {
             ) : (
               <>
                 {/* When not signed in */}
-                <ListItem button sx={{ marginBottom: '15px' }}  onClick={handleSignOutClick}>
+                <ListItem button sx={{ marginBottom: '15px' }} onClick={handleSignOutClick}>
                   <ListItemIcon>
                     <LockIcon />
                   </ListItemIcon>
