@@ -59,7 +59,7 @@ export default function Home() {
       : sort === "highest-rated"
       ? sortRestaurants(restaurants, ratings)
       : sort === "newest"
-      ? sortRestaurants(restaurants, dateCreated)
+      ? sortRestaurants(restaurants, createdAt)
       : sort === "most-rated"
       ? sortRestaurants(restaurants, noOfRatings)
       : null;
