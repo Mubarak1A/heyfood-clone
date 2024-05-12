@@ -11,7 +11,7 @@ const RestaurantCard = ({ restaurant }) => {
       {/* Restaurant image */}
       <CardMedia
         component="img"
-        src={imgUrl}
+        src={restaurant.imgUrl}
         alt={name}
         height="140"
         sx={{ borderRadius: '8px' }}
