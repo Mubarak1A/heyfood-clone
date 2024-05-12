@@ -1,22 +1,7 @@
 // components/Sidebar.js
 import React, { useState } from 'react';
-import {
-  Drawer,
-  List,
-  ListItem,
-  ListItemIcon,
-  ListItemText,
-  IconButton,
-  Divider,
-  Typography,
-} from '@mui/material';
-import {
-  Menu as MenuIcon,
-  Lock as LockIcon,
-  Person as PersonIcon,
-  Logout as LogoutIcon,
-  Close as CloseIcon,
-} from '@mui/icons-material';
+import { Drawer, List, ListItem, ListItemIcon, ListItemText, IconButton, Divider, Typography } from '@mui/material';
+import { Menu as MenuIcon, Lock as LockIcon, Person as PersonIcon, Logout as LogoutIcon, Close as CloseIcon } from '@mui/icons-material';
 import AppleIcon from '@mui/icons-material/Apple';
 import AndroidIcon from '@mui/icons-material/Android';
 
@@ -38,7 +23,7 @@ const Sidebar = ({ user = null }) => {
       <Drawer anchor="left" open={isOpen} onClose={toggleDrawer}>
         <div style={{ width: 250 }}>
           {/* Close Icon */}
-          <IconButton onClick={toggleDrawer} style={{ alignSelf: 'flex-end' }}>
+          <IconButton onClick={toggleDrawer} style={{ alignSelf: 'right' }}>
             <CloseIcon />
           </IconButton>
 
@@ -46,23 +31,23 @@ const Sidebar = ({ user = null }) => {
             {user ? (
               <>
                 {/* When signed in */}
-                <ListItem>
+                <ListItem sx={{ marginBottom: '5px' }}>
                   <ListItemIcon>
                     <PersonIcon />
                   </ListItemIcon>
                   <ListItemText primary={user.name} />
                 </ListItem>
-                <ListItem button>
+                <ListItem button sx={{ marginBottom: '15px' }} onClick={handleSignInClick}>
                   <ListItemIcon>
                     <LogoutIcon />
                   </ListItemIcon>
-                  <ListItemText primary="Sign Out" />
+                  <ListItemText primary="Sign In" />
                 </ListItem>
               </>
             ) : (
               <>
                 {/* When not signed in */}
-                <ListItem button>
+                <ListItem button sx={{ marginBottom: '15px' }}  onClick={handleSignOutClick}>
                   <ListItemIcon>
                     <LockIcon />
                   </ListItemIcon>
@@ -87,18 +72,20 @@ const Sidebar = ({ user = null }) => {
             <Typography variant="h6" style={{ margin: '20px 0' }}>
               Experience the Heyfood mobile app
             </Typography>
-            <ListItem>
-              <ListItemIcon>
-                <AppleIcon />
-              </ListItemIcon>
-              <ListItemText primary="Apple Store" />
-            </ListItem>
-            <ListItem>
-              <ListItemIcon>
-                <AndroidIcon />
-              </ListItemIcon>
-              <ListItemText primary="Play Store" />
-            </ListItem>
+            <List sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+              <ListItem >
+                <Button sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', backgroundColour: 'black' }}>
+                  <AppleIcon />
+                  <Typography variant="h6">Apple Store</Typography>
+                </Button>
+              </ListItem>
+              <ListItem>
+                <Button sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', backgroundColour: 'black' }}>
+                  <AndroidIcon />
+                  <Typography variant="h6">Android Store</Typography>
+                </Button>
+              </ListItem>
+            </List>
           </List>
         </div>
       </Drawer>
