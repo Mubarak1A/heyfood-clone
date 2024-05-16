@@ -110,7 +110,7 @@ const Navbar = ({ cartCount = 0, foodItems, isSignIn }) => {
 
             {/* Sign In and Cart */}
             <Box sx={{ flex: '1 1 auto', display: { xs: 'none', md: 'flex' }, justifyContent: 'flex-end' }}>
-              {!isSignIn && (
+              {!(localStorage.getItem('currentuser')) && (
                 <Button onClick={handleSignInClick}>
                   <Typography variant="h6" sx={{ color: 'black'}}>SIGNIN</Typography>
                 </Button>

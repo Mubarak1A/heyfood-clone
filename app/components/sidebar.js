@@ -14,7 +14,7 @@ const Sidebar = ({ handleSignInClick }) => {
 
   const handleSignOutClick = () => {
     localStorage.removeItem("currentuser")
-    user = None
+    location.reload()
   }
 
   return (
@@ -26,9 +26,9 @@ const Sidebar = ({ handleSignInClick }) => {
 
       {/* Sidebar Drawer */}
       <Drawer anchor="left" open={isOpen} onClose={toggleDrawer}>
-        <div style={{ width: 250 }}>
+        <div style={{ width: 300 }}>
           {/* Close Icon */}
-          <IconButton onClick={toggleDrawer} style={{ alignSelf: 'right' }}>
+          <IconButton onClick={toggleDrawer} sx={{ marginBottom: '10px', alignSelf: 'right', position: 'absolute', right: '0', top: '0' }}>
             <CloseIcon />
           </IconButton>
 
@@ -36,27 +36,27 @@ const Sidebar = ({ handleSignInClick }) => {
             {localStorage.getItem('currentuser') ? (
               <>
                 {/* When signed in */}
-                <ListItem sx={{ marginBottom: '5px' }}>
+                <ListItem sx={{ margin: '15px' }}>
                   <ListItemIcon>
                     <PersonIcon />
                   </ListItemIcon>
-                  <ListItemText primary={user.name} />
+                  <ListItemText primary={localStorage.getItem('currentuser').name} />
                 </ListItem>
-                <ListItem button sx={{ marginBottom: '15px' }} onClick={handleSignInClick}>
+                <ListItem button sx={{ marginBottom: '15px' }} onClick={handleSignOutClick}>
                   <ListItemIcon>
                     <LogoutIcon />
                   </ListItemIcon>
-                  <ListItemText primary="Sign In" />
+                  <ListItemText primary="Sign Out" />
                 </ListItem>
               </>
             ) : (
               <>
                 {/* When not signed in */}
-                <ListItem button sx={{ marginBottom: '15px' }} onClick={handleSignOutClick}>
+                <ListItem button sx={{ margin: '20px' }} onClick={handleSignInClick}>
                   <ListItemIcon>
                     <LockIcon />
                   </ListItemIcon>
-                  <ListItemText primary="Sign In" onClick={handleSignInClick}/>
+                  <ListItemText primary="Sign In"/>
                 </ListItem>
               </>
             )}
@@ -74,20 +74,20 @@ const Sidebar = ({ handleSignInClick }) => {
 
             {/* App logo and store icons (Apple Store, Play Store) */}
             <Divider />
-            <Typography variant="h6" style={{ margin: '20px 0' }}>
+            <Typography variant="h6" sx={{ padding: '20px' }}>
               Experience the Heyfood mobile app
             </Typography>
-            <List sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+            <List sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '10px' }}>
               <ListItem >
-                <Button sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', backgroundColour: 'black' }}>
+                <Button sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', background: 'black', borderRadius: '50px' }}>
                   <AppleIcon />
-                  <Typography variant="h6">Apple Store</Typography>
+                  <Typography variant="body1">Apple Store</Typography>
                 </Button>
               </ListItem>
               <ListItem>
-                <Button sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', backgroundColour: 'black' }}>
+                <Button sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', background: 'black', borderRadius: '50px' }}>
                   <AndroidIcon />
-                  <Typography variant="h6">Android Store</Typography>
+                  <Typography variant="body1">Android Store</Typography>
                 </Button>
               </ListItem>
             </List>

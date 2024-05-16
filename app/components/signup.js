@@ -15,7 +15,7 @@ const SignUpDialog = ({ open, onClose, onSwitchToSignIn }) => {
       pin: pin,
     };
 
-    const url = "https://heyfood-clone-backend.onrender.com/restaurants/register";
+    const url = "https://heyfood-clone-backend.onrender.com/register";
     axios.post(url, user)
       .then((response) => {
         localStorage.setItem("currentuser", JSON.stringify(response.data));
@@ -23,7 +23,7 @@ const SignUpDialog = ({ open, onClose, onSwitchToSignIn }) => {
       })
       .catch((err) => {
         setError(true);
-        // console.log(err);
+        console.log(err);
       });
   };
 

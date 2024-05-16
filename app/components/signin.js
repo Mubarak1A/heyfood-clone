@@ -13,7 +13,7 @@ const SignInDialog = ({ open, onClose, onSwitchToSignUp }) => {
       pin: pin,
     };
 
-    const url = "https://heyfood-clone-backend.onrender.com/restaurants/login";
+    const url = "https://heyfood-clone-backend.onrender.com/login";
     axios.post(url, user)
       .then((response) => {
         localStorage.setItem("currentuser", JSON.stringify(response.data));
