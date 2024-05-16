@@ -7,18 +7,19 @@ const RestaurantCard = ({ restaurant }) => {
   const { imgUrl, name, ratings, numberOfRatings } = restaurant;
 
   return (
-    <Card sx={{ width: '100%', padding: 1, borderRadius: '8px' }}>
+    <Box sx={{ width: '100%', padding: 1, borderRadius: '8px', border: 'none' }}>
       {/* Restaurant image */}
-      <CardMedia
+      <img
         component="img"
         src={restaurant.imgUrl}
         alt={name}
-        height="140"
-        sx={{ borderRadius: '8px' }}
+        width="100%"
+        height="40%"
+        sx={{ borderRadius: '8px', margin: '0' }}
       />
 
       {/* Restaurant name */}
-      <CardContent>
+      <Box>
         <Typography variant="h6">{name}</Typography>
 
         {/* Rating with star icon */}
@@ -28,8 +29,8 @@ const RestaurantCard = ({ restaurant }) => {
             {ratings} ({numberOfRatings} Ratings)
           </Typography>
         </Box>
-      </CardContent>
-    </Card>
+      </Box>
+    </Box>
   );
 };
 

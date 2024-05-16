@@ -1,6 +1,7 @@
 "use client";
 import React from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import axios from 'axios'
 import Navbar from "./components/navbar";
 import Category from "./components/categories";
 import FoodList from "./components/foodLists";
@@ -12,11 +13,11 @@ import { IconButton, Menu, MenuItem } from "@mui/material";
 //import Grid from '@mui/material/Grid';
 //import Container from '@mui/material/Container';
 import { ArrowDropDown as ArrowDropDownIcon } from "@mui/icons-material";
-import { createMuiTheme, ThemeProvider } from "@mui/material";
+import { createTheme, ThemeProvider } from "@mui/material";
 import SignInDialog from "./components/signin";
 import Sidebar from "./components/sidebar";
 
-const theme = createMuiTheme({
+const theme = createTheme({
   palette: {
     primary: {
       main: "#fefefe",
@@ -30,14 +31,15 @@ const theme = createMuiTheme({
   },
 });
 
-const foodItem = Navbar.foodItem
-const isSignIn = localStorage.getItem('currentuser') ? true : false
+//const foodItem = []
 
 export default function Home() {
   const [anchorEl, setAnchorEl] = useState(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [restaurants, setRestaurants] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [foodItems, setFoodItems] = useState([]);
+  const [resLoading, setResLoading] = useState(false);
+  const [foodLoading, setFoodLoading] = useState(false);
 
   let sort = SortingComponent.sort;
 
@@ -65,15 +67,28 @@ export default function Home() {
       : null;
 
   useEffect(() => {
+    setResLoading(true)
+    setFoodLoading(true)
     axios
       .get("https://heyfood-clone-backend.onrender.com/restaurants")
       .then((response) => {
         setRestaurants(response.data);
-        setLoading(false);
+        setResLoading(false);
       })
       .catch((error) => {
         console.error("Error fetching restaurants:", error);
-        setLoading(false);
+        setResLoading(false);
+      });
+    
+      axios
+      .get('https://heyfood-clone-backend.onrender.com/getFoods')
+      .then((response) => {
+        setFoodItems(response.data);
+        setFoodLoading(false);
+      })
+      .catch((error) => {
+        console.error('Error fetching food items:', error);
+        setFoodLoading(false);
       });
   }, []);
 
@@ -94,25 +109,25 @@ export default function Home() {
   };
 
   const bannerUrls = [
+    "https://res.cloudinary.com/dgny0gcfm/image/upload/v1715129070/heyfood/banner1_yydgnf.jpg",
+    "https://res.cloudinary.com/dgny0gcfm/image/upload/v1715129071/heyfood/banner2_id02hc.jpg",
+    "https://res.cloudinary.com/dgny0gcfm/image/upload/v1715129071/heyfood/banner3_ljktzn.jpg",
     "https://res.cloudinary.com/dgny0gcfm/image/upload/v1715129071/heyfood/banner4_jnqilv.jpg",
     "https://res.cloudinary.com/dgny0gcfm/image/upload/v1715129071/heyfood/banner5_hj84pf.jpg",
     "https://res.cloudinary.com/dgny0gcfm/image/upload/v1715129071/heyfood/banner6_knpb9c.jpg",
-    "https://res.cloudinary.com/dgny0gcfm/image/upload/v1715129071/heyfood/banner7_m1xhgc.jpg",
-    "https://res.cloudinary.com/dgny0gcfm/image/upload/v1715129071/heyfood/banner3_ljktzn.jpg",
-    "https://res.cloudinary.com/dgny0gcfm/image/upload/v1715129071/heyfood/banner2_id02hc.jpg",
-    "https://res.cloudinary.com/dgny0gcfm/image/upload/v1715129070/heyfood/banner1_yydgnf.jpg",
+    "https://res.cloudinary.com/dgny0gcfm/image/upload/v1715129071/heyfood/banner7_m1xhgc.jpg"
   ];
 
   return (
     <>
       <ThemeProvider theme={theme}>
-        <Navbar foodItem={foodItem} isSignIn={isSignIn} />
+        <Navbar foodItems={foodItems} />
         <Category
           /*activeCategory={activeCategory}*/
           onCategoryClick={handleCategoryClick}
           onMenuClick={handleMenuClick}
         />
-        <FoodList bannerUrls={bannerUrls} />
+        <FoodList foodItems={foodItems} foodLoading={foodLoading}/>
         <BannerCarousel bannerUrls={bannerUrls} />
         <Box>
           {/* Sorting drop-down menu for mobile */}
@@ -146,16 +161,16 @@ export default function Home() {
             {/* Sorting component for larger screens */}
             <Box
               sx={{
-                flex: 1,
-                display: { xs: "none", md: "block" }, // Only show on larger screens
+                flex: 2,
+                display: { xs: "none", md: "block" },
               }}
             >
               <SortingComponent numberOfStores={numberOfStores || 0} />
             </Box>
 
             {/* Restaurants list */}
-            <Box sx={{ flex: 3 }}>
-              <RestaurantList restaurants={restaurants} loading={loading} sortedRestaurants={sortedRestaurants}/>
+            <Box sx={{ flex: 4 }}>
+              <RestaurantList restaurants={restaurants} resLoading={resLoading} sortedRestaurants={sortedRestaurants}/>
             </Box>
           </Box>
         </Box>

@@ -1,34 +1,15 @@
-// components/FoodList.js
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-import { Box, Typography, CircularProgress, Paper } from '@mui/material';
+import React from 'react';
+import { Box, Typography, CircularProgress } from '@mui/material';
 
-const FoodList = () => {
-  const [foodItems, setFoodItems] = useState([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    // Fetch the list of food items from the backend
-    axios
-      .get('https://heyfood-clone-backend.onrender.com/getFoods')
-      .then((response) => {
-        setFoodItems(response.data);
-        setLoading(false);
-      })
-      .catch((error) => {
-        console.error('Error fetching food items:', error);
-        setLoading(false);
-      });
-  }, []);
-
-  if (loading) {
+const FoodList = ({ foodItems, foodLoading }) => {
+  if (foodLoading) {
     return (
       <Box
         sx={{
           display: 'flex',
           justifyContent: 'center',
           alignItems: 'center',
-          height: '100vh', // Center the loading spinner
+          height: '100vh'
         }}
       >
         <CircularProgress />
@@ -48,10 +29,12 @@ const FoodList = () => {
         '&::-webkit-scrollbar': {
           display: 'none',
         },
+        touchAction: 'pan-y',
+        '-webkit-overflow-scrolling': 'touch',
       }}
     >
       {foodItems.map((foodItem, index) => (
-        <Paper
+        <Box
           key={index}
           sx={{
             flex: '0 0 auto',
@@ -59,18 +42,20 @@ const FoodList = () => {
             width: '200px',
             margin: 1,
             backgroundColor: 'white',
-            padding: '10px',
             textAlign: 'center',
-            border: '1px solid #ccc',
+            touchAction: 'manipulation', // Ensure touch events are not blocked
+            overflowY: 'hidden', // Prevent vertical scrolling
+            borderRadius: '8px',
+            boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)', // Light shadow
           }}
         >
           <img
             src={foodItem.tagUrl}
             alt={`foodTag ${index + 1}`}
-            style={{ maxWidth: '100%', height: 'auto' }} // Ensures image fits within the swiper item
+            style={{ maxWidth: '100%', height: 'auto' }}
           />
           <Typography variant="subtitle1">{foodItem.name}</Typography>
-        </Paper>
+        </Box>
       ))}
     </Box>
   );

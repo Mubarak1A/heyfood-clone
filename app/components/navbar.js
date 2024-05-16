@@ -2,55 +2,14 @@ import React, { useState } from "react";
 import { AppBar, Toolbar, Typography, IconButton, Badge, InputBase, Box, Button } from "@mui/material";
 import { Menu as MenuIcon, LocationOn as LocationIcon, Search as SearchIcon, ShoppingCart as ShoppingCartIcon, Image } from "@mui/icons-material";
 import { alpha, styled } from "@mui/material/styles";
-
-// Import other custom components
 import Sidebar from "./sidebar";
 import SearchOverlay from './searchOverlay';
 import SignInDialog from './signin';
 import SignUpDialog from './signup';
 
-const Search = styled('div')(({ theme }) => ({
-  position: 'relative',
-  borderRadius: theme.shape.borderRadius,
-  backgroundColor: alpha(theme.palette.common.white, 0.15),
-  '&:hover': {
-    backgroundColor: alpha(theme.palette.common.white, 0.25),
-  },
-  marginRight: theme.spacing(2),
-  marginLeft: 0,
-  width: '100%',
-  [theme.breakpoints.up('sm')]: {
-    marginLeft: theme.spacing(3),
-    width: 'auto',
-  },
-}));
+const cartItem = 0;
 
-const SearchIconWrapper = styled('div')(({ theme }) => ({
-  padding: theme.spacing(0, 2),
-  height: '100%',
-  position: 'absolute',
-  pointerEvents: 'none',
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-}));
-
-const StyledInputBase = styled(InputBase)(({ theme }) => ({
-  color: 'inherit',
-  '& .MuiInputBase-input': {
-    padding: theme.spacing(1, 1, 1, 0),
-    // vertical padding + font size from searchIcon
-    paddingLeft: `calc(1em + ${theme.spacing(4)})`,
-    transition: theme.transitions.create('width'),
-    width: '100%',
-    [theme.breakpoints.up('md')]: {
-      width: '20ch',
-    },
-  },
-}));
-
-const Navbar = ({ cartCount = 0, foodItem, isSignIn }) => {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+const Navbar = ({ cartCount = 0, foodItems, isSignIn }) => {
   const [isOverlayOpen, setIsOverlayOpen] = useState(false);
   const [isSignInOpen, setIsSignInOpen] = useState(false);
   const [isSignUpOpen, setIsSignUpOpen] = useState(false);
@@ -89,7 +48,7 @@ const Navbar = ({ cartCount = 0, foodItem, isSignIn }) => {
     setIsOverlayOpen(false); // Close the overlay
   };
 
-  const Search = styled('div')(({ theme }) => ({
+  const SearchWrapper = styled('div')(({ theme }) => ({
     position: 'relative',
     borderRadius: theme.shape.borderRadius,
     backgroundColor: '#f5f5f5',
@@ -104,25 +63,6 @@ const Navbar = ({ cartCount = 0, foodItem, isSignIn }) => {
       width: 'auto',
     },
   }));
-
-  const StyledInputBase = styled(InputBase)(({ theme }) => ({
-    padding: theme.spacing(1, 1, 1, 0),
-    // vertical padding + font size from typography
-    paddingLeft: `calc(1em + ${theme.typography.fontSize}px)`,
-    transition: theme.transitions.create('width'),
-    width: '100%',
-    [theme.breakpoints.up('sm')]: {
-      width: '12ch',
-      '&:focus': {
-        width: '20ch',
-      },
-    },
-  }));
-
-  const StyledTypography = styled(Typography)(({ theme }) => ({
-    flexGrow: 1,
-    textAlign: 'right',
-  }))
 
   return (
     <Box sx={{ flexFlow: 1 }}>
@@ -139,45 +79,57 @@ const Navbar = ({ cartCount = 0, foodItem, isSignIn }) => {
       />
 
       <AppBar position="static">
-        <Toolbar sx={{ display: 'flex', justifyContent: 'space-around' }}>
-          <Sidebar isSignIn={isSignIn}/>
-          <img
-            src={'https://res.cloudinary.com/dgny0gcfm/image/upload/v1715128417/heyfood/hey_logo_lctvjf.jpg'}
-            alt={'LOGO'}
-            sx={{ display: { xs: 'block', sm: 'none' } }}
-          />
-          <div sx={{ display: { xs: 'none', md: 'flex' } }}>
-            <IconButton size="large" aria-label="show 4 new mails" color="inherit">
-              <LocationIcon />
-              <Typography variant="body1">Set Location</Typography>
-            </IconButton>
-          </div>
-          <div sx={{ flexGrow: 1 }} />
-          <Search onClick={handleSearchClick}>
-            <StyledInputBase
-              placeholder="Search restaurants or food"
-              inputProps={{ 'aria-label': 'search' }}
-              startAdornment={<SearchIcon />}
-            />
-          </Search>
-          {!(isSignIn) && (
-            <Button onClick={handleSignInClick} sx={{ display: { xs: 'none', md: 'block' } }}>
-            <Typography variant="h6">SIGNIN</Typography>
-          </Button>
-          )}
-          <IconButton size="large" aria-label="show 17 new notifications" color="inherit">
-            <Badge badgeContent={cartCount} color="error">
-              <ShoppingCartIcon />
-            </Badge>
-            <Typography variant="h6" noWrap component="div" sx={{ display: { xs: 'block', sm: 'none' } }}>
-              {`Cart . ${cartItem.length || 0}`}
-            </Typography>
-          </IconButton>
+        <Toolbar>
+          <Box sx={{ display: 'flex', alignItems: 'center', width: '100%' }}>
+            {/* Sidebar and Logo */}
+            <Box sx={{ flex: '1 1 auto', display: 'flex', alignItems: 'center' }}>
+              <Sidebar handleSignInClick={handleSignInClick} handleSignInClose={handleSignInClose}/>
+              <img
+                src={'https://res.cloudinary.com/dgny0gcfm/image/upload/v1715128417/heyfood/hey_logo_lctvjf.jpg'}
+                alt={'LOGO'}
+                sx={{ display: { xs: 'block', sm: 'none' } }}
+              />
+              <div sx={{ display: { xs: 'none', md: 'flex' }, marginLeft: 'auto' }}>
+                <IconButton size="large" aria-label="show 4 new mails" color="inherit">
+                  <LocationIcon />
+                  <Typography variant="body1">Set Location</Typography>
+                </IconButton>
+              </div>
+            </Box>
+
+            {/* Search */}
+            <Box sx={{ flex: '1 1 auto', width: '25%' }}>
+              <SearchWrapper onClick={handleSearchClick}>
+                <InputBase
+                  placeholder="Search restaurants or food"
+                  inputProps={{ 'aria-label': 'search' }}
+                  startAdornment={<SearchIcon />}
+                />
+              </SearchWrapper>
+            </Box>
+
+            {/* Sign In and Cart */}
+            <Box sx={{ flex: '1 1 auto', display: { xs: 'none', md: 'flex' }, justifyContent: 'flex-end' }}>
+              {!isSignIn && (
+                <Button onClick={handleSignInClick}>
+                  <Typography variant="h6" sx={{ color: 'black'}}>SIGNIN</Typography>
+                </Button>
+              )}
+              <IconButton size="large" aria-label="show 17 new notifications" color="inherit">
+                <Badge badgeContent={cartCount} color="error">
+                  <ShoppingCartIcon />
+                </Badge>
+                <Typography variant="h6" noWrap sx={{ ml: 1 }}>
+                  {`Cart . ${cartItem.length || 0}`}
+                </Typography>
+              </IconButton>
+            </Box>
+          </Box>
         </Toolbar>
       </AppBar>
 
       {isOverlayOpen && (
-        <SearchOverlay foodItem={foodItem} onClose={handleOverlayClose} />
+        <SearchOverlay foodItems={foodItems} onClose={handleOverlayClose} />
       )}
     </Box>
   )

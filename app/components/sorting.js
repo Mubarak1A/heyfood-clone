@@ -7,12 +7,12 @@ const SortingComponent = ({ numberOfStores }) => {
 
   return (
     <Box padding={2}>
-      <Typography variant="h6">All Stores</Typography>
+      <Typography variant="h4">All Stores</Typography>
       <Typography variant="subtitle2" color="text.secondary">
         {`${numberOfStores} Stores`}
       </Typography>
 
-      <Typography variant="body1" sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+      <Typography variant="h5" sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
         <SortIcon /> Sort
       </Typography>
 

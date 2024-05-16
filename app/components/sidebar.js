@@ -1,14 +1,12 @@
 // components/Sidebar.js
 import React, { useState } from 'react';
-import { Drawer, List, ListItem, ListItemIcon, ListItemText, IconButton, Divider, Typography } from '@mui/material';
+import { Box, Drawer, List, ListItem, ListItemIcon, ListItemText, IconButton, Divider, Typography, Button } from '@mui/material';
 import { Menu as MenuIcon, Lock as LockIcon, Person as PersonIcon, Logout as LogoutIcon, Close as CloseIcon } from '@mui/icons-material';
 import AppleIcon from '@mui/icons-material/Apple';
 import AndroidIcon from '@mui/icons-material/Android';
 
-const Sidebar = ({ isSignIn }) => {
+const Sidebar = ({ handleSignInClick }) => {
   const [isOpen, setIsOpen] = useState(false);
-
-  let user = JSON.parse(localStorage.getItem("currentuser"));
 
   const toggleDrawer = () => {
     setIsOpen(!isOpen);
@@ -20,7 +18,7 @@ const Sidebar = ({ isSignIn }) => {
   }
 
   return (
-    <>
+    <Box sx={{ padding: '10px' }}>
       {/* Menu Icon to open the sidebar */}
       <IconButton edge="start" color="inherit" onClick={toggleDrawer}>
         <MenuIcon />
@@ -35,7 +33,7 @@ const Sidebar = ({ isSignIn }) => {
           </IconButton>
 
           <List>
-            {isSignIn ? (
+            {localStorage.getItem('currentuser') ? (
               <>
                 {/* When signed in */}
                 <ListItem sx={{ marginBottom: '5px' }}>
@@ -58,7 +56,7 @@ const Sidebar = ({ isSignIn }) => {
                   <ListItemIcon>
                     <LockIcon />
                   </ListItemIcon>
-                  <ListItemText primary="Sign In" />
+                  <ListItemText primary="Sign In" onClick={handleSignInClick}/>
                 </ListItem>
               </>
             )}
@@ -96,7 +94,7 @@ const Sidebar = ({ isSignIn }) => {
           </List>
         </div>
       </Drawer>
-    </>
+    </Box>
   );
 };
 

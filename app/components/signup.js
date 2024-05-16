@@ -1,55 +1,43 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField, Typography } from '@mui/material';
+import axios from 'axios';
 
 const SignUpDialog = ({ open, onClose, onSwitchToSignIn }) => {
-  const [name, setName] = useState(false)
-  const [phoneNumber, setPhoneNumber] = useState("")
-  const [pin, setPin] = useState("")
-
-  const user = {
-    name,
-    phoneNumber,
-    pin,
-  }
+  const [name, setName] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [pin, setPin] = useState("");
+  const [error, setError] = useState(false);
 
   const handleSubmit = () => {
-    setLoading(true)
-    const url = "https://heyfood-clone-backend.onrender.com/restaurants/signup"
-    fetch(url, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(user)
-    })
+    const user = {
+      name: name,
+      phoneNumber: phoneNumber,
+      pin: pin,
+    };
+
+    const url = "https://heyfood-clone-backend.onrender.com/restaurants/register";
+    axios.post(url, user)
       .then((response) => {
-        setLoading(false);
-        if (!response.ok) {
-          console.log('Network response was not ok');
-        }
-        return response.json();
-      })
-      .then((user) => {
-        localStorage.setItem("currentuser", JSON.stringify(user));
-        setIsSignIn(true)
-        onClose()
+        localStorage.setItem("currentuser", JSON.stringify(response.data));
+        onClose();
       })
       .catch((err) => {
-        setLoading(false)
-        setError(true)
-        //console.log(err)
-      })
-  }
-
+        setError(true);
+        // console.log(err);
+      });
+  };
 
   return (
     <Dialog open={open} onClose={onClose}>
-      <DialogTitle>Sign Up</DialogTitle>
+      <Typography variant='h5' sx={{ paddingLeft: '20px', paddingTop: '10px', color: 'green'}}>Sign Up!</Typography>
+      <Typography variant='h6' sx={{ paddingLeft: '20px', paddingTop: '10px', color: 'green'}}>Enter your details to create an account.</Typography>
+      { error && <Typography variant='body1' sx={{paddingLeft: '20px', paddingTop: '15px', color: 'red'}}>Something went wrong pls try again!</Typography>}
       <DialogContent>
         <TextField
           fullWidth
           label="Name"
           variant="outlined"
           margin="normal"
-          type="tel"
           onChange={(e) => setName(e.target.value)}
         />
 
@@ -58,7 +46,7 @@ const SignUpDialog = ({ open, onClose, onSwitchToSignIn }) => {
           label="Phone Number"
           variant="outlined"
           margin="normal"
-          type="password"
+          type="tel"
           onChange={(e) => setPhoneNumber(e.target.value)}
         />
 
@@ -74,7 +62,7 @@ const SignUpDialog = ({ open, onClose, onSwitchToSignIn }) => {
 
       <DialogActions>
         <Button onClick={onClose}>Cancel</Button>
-        <Button variant="contained" color="primary" onClick={handleSubmit}>Sign Up</Button>
+        <Button variant="contained" onClick={handleSubmit} sx={{ color: 'white', background: 'green', margin: '5px'}}>Sign Up</Button>
       </DialogActions>
 
       <DialogContent>
@@ -82,7 +70,7 @@ const SignUpDialog = ({ open, onClose, onSwitchToSignIn }) => {
           Already have an account?{' '}
           <Button
             variant="text"
-            color="primary"
+            sx={{ color: 'green'}}
             onClick={onSwitchToSignIn}
           >
             Sign In

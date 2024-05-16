@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import React from 'react';
 import {
   Box,
   Typography,
@@ -7,53 +6,14 @@ import {
   CircularProgress,
   Paper,
 } from '@mui/material';
-import 'swiper/css'; // Importing Swiper CSS
-import 'swiper/css/navigation';
-import 'swiper/css/autoplay';
 import RestaurantCard from './restaurantCard';
 import { red } from '@mui/material/colors';
 
-const RestaurantList = ({ restaurants, loading, sortedRestaurants }) => {
+const RestaurantList = ({ restaurants, resLoading, sortedRestaurants }) => {
   // Function to filter restaurants based on a condition
   const filterRestaurants = (condition) => restaurants.filter(condition);
 
-  if (loading) {
-    return (
-      <Box
-        sx={{
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          height: '100vh', // Center loading indicator
-        }}
-      >
-        <CircularProgress />
-      </Box>
-    );
-  }
-
-  const swiperSx = {
-    display: 'flex',
-    overflowX: 'auto',
-    scrollSnapType: 'x mandatory',
-    scrollbarWidth: 'none',
-    msOverflowStyle: 'none',
-    '&::-webkit-scrollbar': {
-      display: 'none', // Hide scrollbar
-    },
-  };
-
-  const swiperItemSx = {
-    flex: '0 0 auto',
-    scrollSnapAlign: 'start',
-    minWidth: '200px', // Minimum width for readability
-    margin: 1, // Spacing between items
-    backgroundColor: 'white',
-    padding: 2,
-    borderRadius: '8px', // Rounded corners
-  };
-
-  if (loading) {
+  if (resLoading) {
     return (
       <Box
         sx={{
@@ -71,15 +31,15 @@ const RestaurantList = ({ restaurants, loading, sortedRestaurants }) => {
   if (sortedRestaurants != null) {
     return (
       <Box padding={2}>
-        <Box>
-          <Box sx={{ display: 'flex', justifyContent: 'flex-start'}}>
-        <Typography variant="h4">{`${sortedRestaurants.length} Stores near you`}</Typography>
-        <Typography button variant="h6" color={red} onClick={() => sortedRestaurants = null}>Reset</Typography>
-          </Box>
-        {sortedRestaurants.map((restaurant) => (
-          <RestaurantCard key={restaurant._id} restaurant={restaurant} />
-        ))}
-      </Box>
+        <Box sx={{ display: 'flex', justifyContent: 'flex-start' }}>
+          <Typography variant="h4">{`${sortedRestaurants.length} Stores near you`}</Typography>
+          <Typography button variant="h6" color={red} onClick={() => sortedRestaurants = null}>Reset</Typography>
+        </Box>
+        <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: '16px', padding: '16px 0' }}>
+          {sortedRestaurants.map((restaurant) => (
+            <RestaurantCard key={restaurant._id} restaurant={restaurant} />
+          ))}
+        </Box>
       </Box>
     )
   }
@@ -87,7 +47,7 @@ const RestaurantList = ({ restaurants, loading, sortedRestaurants }) => {
   return (
     <Box padding={2}>
       {/* Newest Section */}
-      <Box marginY={2}>
+      <Box>
         <Box
           sx={{
             display: 'flex',
@@ -95,44 +55,18 @@ const RestaurantList = ({ restaurants, loading, sortedRestaurants }) => {
             alignItems: 'center',
           }}
         >
-          <Typography variant="h6">New on Heyfood 🔥</Typography>
+          <Typography variant="h4">New on Heyfood 🔥</Typography>
           <Button variant="text" size="small">See All</Button>
         </Box>
-
-        <Box
-          sx={{
-            padding: 2,
-            display: 'flex',
-            overflowX: 'auto',
-            scrollSnapType: 'x mandatory',
-            scrollbarWidth: 'none',
-            msOverflowStyle: 'none',
-            '&::-webkit-scrollbar': {
-              display: 'none',
-            },
-          }}
-        >
-          {filterRestaurants((r) => r.isNew).map((restaurant) => (
-            <Paper
-              key={index}
-              sx={{
-                flex: '0 0 auto',
-                scrollSnapAlign: 'start',
-                width: '200px',
-                margin: 1,
-                backgroundColor: 'white',
-                padding: '10px',
-                textAlign: 'center',
-                border: '1px solid #ccc',
-              }} >
-              <RestaurantCard restaurant={restaurant} />
-            </Paper>
+        <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: '16px', padding: '16px 0' }}>
+          {filterRestaurants((r) => r.isNew).map((restaurant, index) => (
+            <RestaurantCard key={index} restaurant={restaurant} />
           ))}
         </Box>
       </Box>
 
       {/* Promo Section */}
-      <Box marginY={2}>
+      <Box >
         <Box
           sx={{
             display: 'flex',
@@ -140,168 +74,84 @@ const RestaurantList = ({ restaurants, loading, sortedRestaurants }) => {
             alignItems: 'center',
           }}
         >
-          <Typography variant="h6">Promos for You! 😍</Typography>
+          <Typography variant="h4">Promos for You! 😍</Typography>
           <Button variant="text" size="small">See All</Button>
         </Box>
-
-        <Box
-          sx={{
-            padding: 2,
-            display: 'flex',
-            overflowX: 'auto',
-            scrollSnapType: 'x mandatory',
-            scrollbarWidth: 'none',
-            msOverflowStyle: 'none',
-            '&::-webkit-scrollbar': {
-              display: 'none',
-            },
-          }}
-        >
-          {filterRestaurants((r) => r.discount > 0).map((restaurant) => (
-            <Paper
-              key={index}
-              sx={{
-                flex: '0 0 auto',
-                scrollSnapAlign: 'start',
-                width: '200px',
-                margin: 1,
-                backgroundColor: 'white',
-                padding: '10px',
-                textAlign: 'center',
-                border: '1px solid #ccc',
-              }} >
-              <RestaurantCard restaurant={restaurant} />
-            </Paper>
+        <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: '16px', padding: '16px 0' }}>
+          {filterRestaurants((r) => r.discount > 0).map((restaurant, index) => (
+            <RestaurantCard key={index} restaurant={restaurant} />
           ))}
         </Box>
       </Box>
 
       {/* Amala Section */}
       <Box>
-        <Box display="flex" justifyContent="space-between" alignItems="center">
-          <Typography variant="h6">Amala 🔥</Typography>
-          <Button variant="text" size="small">See All</Button>
-        </Box>
-
         <Box
           sx={{
-            padding: 2,
             display: 'flex',
-            overflowX: 'auto',
-            scrollSnapType: 'x mandatory',
-            scrollbarWidth: 'none',
-            msOverflowStyle: 'none',
-            '&::-webkit-scrollbar': {
-              display: 'none',
-            },
+            justifyContent: 'space-between',
+            alignItems: 'center',
           }}
         >
-          {filterRestaurants((r) => r.availableFoods.some((f) => f.name === 'amala')).map((restaurant) => (
-            <Paper
-              key={index}
-              sx={{
-                flex: '0 0 auto',
-                scrollSnapAlign: 'start',
-                width: '200px',
-                margin: 1,
-                backgroundColor: 'white',
-                padding: '10px',
-                textAlign: 'center',
-                border: '1px solid #ccc',
-              }} >
-              <RestaurantCard restaurant={restaurant} />
-            </Paper>
+          <Typography variant="h4">Amala 🔥</Typography>
+          <Button variant="text" size="small">See All</Button>
+        </Box>
+        <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: '16px', padding: '16px 0' }}>
+          {filterRestaurants((r) => r.availableFoods.some((f) => f.name === 'amala')).map((restaurant, index) => (
+            <RestaurantCard key={index} restaurant={restaurant} />
           ))}
         </Box>
       </Box>
 
       {/* Free Drinks Section */}
       <Box>
-        <Box display="flex" justifyContent="space-between" alignItems="center">
-          <Typography variant="h6">Free Drinks</Typography>
-          <Button variant="text" size="small">See All</Button>
-        </Box>
-
         <Box
           sx={{
-            padding: 2,
             display: 'flex',
-            overflowX: 'auto',
-            scrollSnapType: 'x mandatory',
-            scrollbarWidth: 'none',
-            msOverflowStyle: 'none',
-            '&::-webkit-scrollbar': {
-              display: 'none',
-            },
+            justifyContent: 'space-between',
+            alignItems: 'center',
           }}
         >
-          {filterRestaurants((r) => r.freeDrinks).map((restaurant) => (
-            <Paper
-              key={index}
-              sx={{
-                flex: '0 0 auto',
-                scrollSnapAlign: 'start',
-                width: '200px',
-                margin: 1,
-                backgroundColor: 'white',
-                padding: '10px',
-                textAlign: 'center',
-                border: '1px solid #ccc',
-              }} >
-              <RestaurantCard restaurant={restaurant} />
-            </Paper>
+          <Typography variant="h4">Free Drinks</Typography>
+          <Button variant="text" size="small">See All</Button>
+        </Box>
+        <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: '16px', padding: '16px 0' }}>
+          {filterRestaurants((r) => r.freeDrinks).map((restaurant, index) => (
+            <RestaurantCard key={index} restaurant={restaurant} />
           ))}
         </Box>
       </Box>
 
       {/* Fingers Food Section */}
       <Box>
-        <Box display="flex" justifyContent="space-between" alignItems="center">
-          <Typography variant="h6">Fingers Food 🍕🍩</Typography>
-          <Button variant="text" size="small">See All</Button>
-        </Box>
-
         <Box
           sx={{
-            padding: 2,
             display: 'flex',
-            overflowX: 'auto',
-            scrollSnapType: 'x mandatory',
-            scrollbarWidth: 'none',
-            msOverflowStyle: 'none',
-            '&::-webkit-scrollbar': {
-              display: 'none',
-            },
+            justifyContent: 'space-between',
+            alignItems: 'center',
           }}
         >
-          {filterRestaurants((r) => r.availableFoods.some((f) => f.name === 'shawarma' || f.name === 'grills')).map((restaurant) => (
-            <Paper
-              key={index}
-              sx={{
-                flex: '0 0 auto',
-                scrollSnapAlign: 'start',
-                width: '200px',
-                margin: 1,
-                backgroundColor: 'white',
-                padding: '10px',
-                textAlign: 'center',
-                border: '1px solid #ccc',
-              }} >
-              <RestaurantCard restaurant={restaurant} />
-            </Paper>
+          <Typography variant="h4">Fingers Food 🍕🍩</Typography>
+          <Button variant="text" size="small">See All</Button>
+        </Box>
+        <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: '16px', padding: '16px 0' }}>
+          {filterRestaurants((r) => r.availableFoods.some((f) => f.name === 'shawarma' || f.name === 'grills')).map((restaurant, index) => (
+            <RestaurantCard key={index} restaurant={restaurant} />
           ))}
         </Box>
       </Box>
 
       {/* All Restaurants Section */}
       <Box>
-        <Typography variant="h6">All Restaurants</Typography>
-
-        {restaurants.map((restaurant) => (
-          <RestaurantCard key={restaurant._id} restaurant={restaurant} />
-        ))}
+        <Typography variant="h4">All Restaurants</Typography>
+        <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: '16px', padding: '16px 0' }}>
+          {restaurants.map((restaurant, index) => (
+            <RestaurantCard key={index} restaurant={restaurant} />
+          ))}
+        </Box>
       </Box>
-    </Box>);
+    </Box>
+  );
 };
 
 export default RestaurantList;
